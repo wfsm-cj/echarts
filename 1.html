@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.0/jquery.min.js"></script>
+	<script src="echarts.js"></script>
+	<script src="china.js"></script>
+</head>
+<body>
+	<div id="map-wrap" style="height: 500px"></div>
+
+	<script>
+		// var mapChart=echarts.init(document.querySelector('#map-wrap'));
+		// var option={
+		// 	geo:{
+		// 		map:'china'
+		// 	}
+		// }
+		// mapChart.setOption(option)
+
+		var myData = [
+			{name: '海门', value: [104, 30, 90]},
+		  	{name: '鄂尔多斯', value: [104, 30.2, 120]},
+		  	{name: '招远', value: [105, 30, 142]},
+		    {name: '舟山', value: [106, 29.985295, 123]},
+		]
+
+		$.get('sichuan.json',function(sichuanJson){
+			echarts.registerMap('sichuan',sichuanJson);//注册地图
+			var mapChart=echarts.init(document.querySelector("#map-wrap"))
+			var option={
+				geo:{
+					map:'sichuan'
+				},
+				itemStyle:{   //定义样式
+					normal:{  //普通状态下的样式
+						areaColor:"#323c48",
+						borderColor:"#111"
+					},
+					emphasis:{ //高亮状态下的样式
+						areaColor:'red' 
+					}
+				},
+				backgroundColor:'lightblue', //图表背景色
+				series:[
+					{
+						name:'销量', //series 名称
+						type:'scatter',//series图表类型
+						coordinateSystem:'geo', //series坐标系类型
+						data:myData    //series数据内容
+					}
+				],
+				visualMap:{
+					type:'continuous',  //连续型
+					min:0, //值域最小值
+					max:200, //值域最大值
+					calculable:true,//是否启用值域漫游
+					inRange:{
+						color:['green','blue','red']
+						// 指定数值从低到高时的颜色变化
+					},
+					textStyle:{
+						color:'#fff'//控件 值域的字体颜色
+					}
+				}
+			}
+			mapChart.setOption(option);
+		})
+	</script>
+</body>
+</html>
